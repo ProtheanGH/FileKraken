@@ -41,6 +41,7 @@ namespace FileKraken.Windows
         string[] splitString = profiles[i].Split('\\');
         splitString = splitString[splitString.Length - 1].Split('.');
         _availabeProfiles.Add(splitString[0]);
+        Profile_Dropdown.Items.Add(_availabeProfiles[i]);
       }
 
       // No profiles? Add Default
@@ -59,8 +60,6 @@ namespace FileKraken.Windows
         SwitchProfile(activeProfile);
       }
 
-      Profile_Dropdown.DataContext = _availabeProfiles;
-      int index = _availabeProfiles.IndexOf(_currentProfile.ProfileName);
       Profile_Dropdown.SelectedIndex = _availabeProfiles.IndexOf(_currentProfile.ProfileName);
     }
 
@@ -144,6 +143,7 @@ namespace FileKraken.Windows
         profileName += profileNumber.ToString();
       }
       _availabeProfiles.Add(profileName);
+      Profile_Dropdown.Items.Add(profileName);
 
       Profile newProfile = new Profile
       {
