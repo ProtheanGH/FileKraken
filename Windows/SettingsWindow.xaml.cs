@@ -22,8 +22,10 @@ namespace FileKraken.Windows
   public partial class SettingsWindow : Window
   {
     // === Private Variables
-    Profile _currentProfile;
     List<string> _availabeProfiles;
+    Profile _currentProfile;
+    int _currentProfileIndex;
+    bool _ignoreSelectionChange; // TODO: If another bool gets added, make a flag system
 
     // === Constructor
     public SettingsWindow(string activeProfile)
@@ -31,8 +33,10 @@ namespace FileKraken.Windows
       // Initialize the UI and WPF Objects
       InitializeComponent();
 
-      _currentProfile = null;
       _availabeProfiles = new List<string>();
+      _currentProfile = null;
+      _currentProfileIndex = 0;
+      _ignoreSelectionChange = false;
 
       // Get the available profiles
       string[] profiles = Directory.GetFiles(ProfileConstants.GetProfileDirectory());
@@ -59,8 +63,6 @@ namespace FileKraken.Windows
 
         SwitchProfile(activeProfile);
       }
-
-      Profile_Dropdown.SelectedIndex = _availabeProfiles.IndexOf(_currentProfile.ProfileName);
     }
 
     // === Events
@@ -79,7 +81,56 @@ namespace FileKraken.Windows
     private void Okay_Btn_Click(object sender, RoutedEventArgs e)
     {
       SaveCurrentProfile();
+
+      this.Close();
     }
+
+    private void RemoveProfile_Btn_Click(object sender, RoutedEventArgs e)
+    {
+      RemoveProfile(_currentProfile.NameOnFile);
+
+      if (_availabeProfiles.Count > 0)
+      {
+        // Switch to a valid Profile
+        _currentProfileIndex = (_currentProfileIndex > 0 ? _currentProfileIndex - 1 : 0);
+        SwitchProfile(_availabeProfiles[_currentProfileIndex]);
+      }
+      else
+      {
+        // Add a Generic Profile
+        AddProfile();
+      }
+    }
+
+    private void ProfileName_Tb_LostFocus(object sender, RoutedEventArgs e)
+    {
+      // Users is persumably done typing the Profile's name, go ahead and make the change (no need to save the profile here yet though)
+      _currentProfile.ProfileName = ProfileName_Tb.Text;
+      _availabeProfiles[_currentProfileIndex] = _currentProfile.ProfileName;
+
+      // We don't want to actually switch profiles here, as we are on the same profile, but it just has an unsaved name
+      _ignoreSelectionChange = true;
+      Profile_Dropdown.Items[_currentProfileIndex] = _currentProfile.ProfileName;
+      Profile_Dropdown.SelectedIndex = _currentProfileIndex;
+    }
+
+    private void Profile_Dropdown_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+      if (true == _ignoreSelectionChange)
+      {
+        _ignoreSelectionChange = false;
+      }
+      else
+      {
+        string newSelection = (string)Profile_Dropdown.SelectedValue;
+        if (_currentProfile.ProfileName != newSelection)
+        {
+          SwitchProfile(newSelection);
+        }
+      }
+    }
+
+    // === End Events
 
     // === Private Interface
     private void SwitchProfile(string profileName)
@@ -95,9 +146,12 @@ namespace FileKraken.Windows
         _currentProfile = new Profile();
       }
 
-      _currentProfile.LoadFromXML(ProfileConstants.GetProfileDirectory() + profileName + ".xml");
+      _currentProfile.LoadFromXML(ProfileConstants.GetProfileDirectory() + profileName);
 
       ProfileName_Tb.Text = _currentProfile.ProfileName;
+
+      ClearComponents();
+      // Display the profile's components
       for (int i = 0; i < _currentProfile.Components.Count; ++i)
       {
         Controls.ComponentField compField = new Controls.ComponentField(OnRemoveComponent);
@@ -107,12 +161,25 @@ namespace FileKraken.Windows
 
         AddComponent(compField);
       }
+
+      // Update the Profile Dropdown
+      _currentProfileIndex = _availabeProfiles.IndexOf(_currentProfile.ProfileName);
+      Profile_Dropdown.SelectedIndex = _currentProfileIndex;
     }
 
     private void AddComponent(Controls.ComponentField component)
     {
       int insertAt = Components_ListView.Items.Count - 1;
       Components_ListView.Items.Insert(insertAt, component);
+    }
+
+    private void ClearComponents()
+    {
+      // Only clear the components, leave the Add Button
+      while (Components_ListView.Items.Count > 1)
+      {
+        Components_ListView.Items.RemoveAt(0);
+      }
     }
 
     private void SaveCurrentProfile()
@@ -155,5 +222,13 @@ namespace FileKraken.Windows
       // Switch to this new Profile
       SwitchProfile(profileName);
     }
+
+    private void RemoveProfile(string profileName)
+    {
+      File.Delete(ProfileConstants.GetProfileFilePath(profileName));
+      _availabeProfiles.Remove(profileName);
+    }
+
+    // === End Private Interface
   }
 }

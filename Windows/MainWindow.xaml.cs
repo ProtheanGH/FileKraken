@@ -33,6 +33,9 @@ namespace FileKraken
     {
       InitializeComponent();
 
+      // Initialize
+      ProfileConstants.Initialize();
+
       // Make sure the needed Directories / Files exist
       if (false == Directory.Exists(FileKrakenConstants.GetFileKrakenDocumentsDirectory()))
       {

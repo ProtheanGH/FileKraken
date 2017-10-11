@@ -8,7 +8,7 @@
         Title="SettingsWindow" Height="368.666" Width="300">
     <Grid>
         <Label x:Name="Profile_Lbl" Content="Profile:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="Profile_Dropdown" HorizontalAlignment="Left" Margin="32,36,0,0" VerticalAlignment="Top" Width="196"/>
+        <ComboBox x:Name="Profile_Dropdown" HorizontalAlignment="Left" Margin="32,36,0,0" VerticalAlignment="Top" Width="196" SelectionChanged="Profile_Dropdown_SelectionChanged"/>
         <Button x:Name="AddProfile_Btn" Content="" HorizontalAlignment="Left" Margin="260,36,0,0" VerticalAlignment="Top" Width="22" Height="22">
             <Button.Background>
                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/AddIcon.png"/>
@@ -16,17 +16,17 @@
         </Button>
 
 
-        <Button x:Name="RemoveProfile_Btn" Content="" HorizontalAlignment="Left" Margin="233,36,0,0" VerticalAlignment="Top" Width="22" Height="22">
+        <Button x:Name="RemoveProfile_Btn" Content="" HorizontalAlignment="Left" Margin="233,36,0,0" VerticalAlignment="Top" Width="22" Height="22" Click="RemoveProfile_Btn_Click">
             <Button.Background>
                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/RemoveIcon.png"/>
             </Button.Background>
         </Button>
         <Label x:Name="ProfileName_Lbl" Content="Profile Name:" HorizontalAlignment="Left" Margin="24,63,0,0" VerticalAlignment="Top" Height="24"/>
-        <TextBlock x:Name="ProfileName_Tb" HorizontalAlignment="Left" Margin="110,68,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="172" ToolTip="Name of this Profile" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
         <ListView x:Name="Components_ListView" Margin="10,115,10,35" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
             <Button x:Name="ComponentAdd_Btn" Content="Add..." Width="75" HorizontalAlignment="Left" VerticalAlignment="Center" Click="ComponentAdd_Btn_Click"/>
         </ListView>
         <Label x:Name="Components_Lbl" Content="Components" HorizontalAlignment="Left" Margin="10,87,0,0" VerticalAlignment="Top" ToolTip="The Folders / Files of this profile"/>
         <Button x:Name="Okay_Btn" Content="Okay" HorizontalAlignment="Right" Margin="207,264,10,10" VerticalAlignment="Bottom" Width="75" HorizontalContentAlignment="Center" Click="Okay_Btn_Click"/>
+        <TextBox x:Name="ProfileName_Tb" Height="23" Margin="110,67,12,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" ToolTip="Name of this Profile." LostFocus="ProfileName_Tb_LostFocus"/>
     </Grid>
 </Window>

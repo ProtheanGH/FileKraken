@@ -14,11 +14,25 @@ namespace FileKraken.Source
     public const string kXMLElement_Destination   = "Destination"; 
     public const string kXMLElement_Active        = "Active";
     public const string kXMLAttribrute_Name       = "name";
+    public const string kXMLFileExtension         = ".xml";
+
+    // === Private Variables
+    private static string _profileDirectory = null;
 
     // === Public Interface
+    public static void Initialize()
+    {
+      _profileDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Documents\\FileKraken\\Profiles\\";
+    }
+
     public static string GetProfileDirectory()
     {
-      return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Documents\\FileKraken\\Profiles\\";
+      return _profileDirectory;
+    }
+
+    public static string GetProfileFilePath(string profile)
+    {
+      return _profileDirectory + profile + kXMLFileExtension;
     }
   }
 
@@ -49,10 +63,12 @@ namespace FileKraken.Source
     // === Public Interface
     public bool LoadFromXML(string filepath)
     {
+      _components.Clear();
+
       XmlReader profileReader = null;
       try
       {
-        profileReader = XmlReader.Create(filepath);
+        profileReader = XmlReader.Create(filepath + ProfileConstants.kXMLFileExtension);
 
         while (profileReader.Read())
         {
@@ -64,6 +80,8 @@ namespace FileKraken.Source
             break;
           }
         }
+
+        profileReader.Close();
       }
       catch (Exception ex)
       {
@@ -83,13 +101,13 @@ namespace FileKraken.Source
       // === If we had a valid original name that was different from our current name, then we need to delete that old profile file
       if ("" != _originalName && _originalName != _profileName)
       {
-        File.Delete(ProfileConstants.GetProfileDirectory() + _originalName);
+        File.Delete(ProfileConstants.GetProfileDirectory() + _originalName + ProfileConstants.kXMLFileExtension);
       }
 
       XmlWriterSettings xmlSettings = new XmlWriterSettings();
       xmlSettings.Indent = true;
 
-      XmlWriter profileWriter = XmlWriter.Create(directory + "\\" + _profileName + ".xml", xmlSettings);
+      XmlWriter profileWriter = XmlWriter.Create(directory + "\\" + _profileName + ProfileConstants.kXMLFileExtension, xmlSettings);
 
       profileWriter.WriteStartDocument();
       profileWriter.WriteStartElement(ProfileConstants.kXMLElement_Profile);
@@ -117,6 +135,7 @@ namespace FileKraken.Source
       profileWriter.Flush();
       profileWriter.Close();
     }
+
 
     // === Private Interface
     private void XMLHelper_ReadProfile(ref XmlReader profileReader)
@@ -180,12 +199,22 @@ namespace FileKraken.Source
     }
 
     // === Properties
+
+    // @property: The profile's name
+    // @note: This name could be different from the name of corresponding file if the profile is 
     public string ProfileName
     {
       get { return _profileName; }
       set { _profileName = value; }
     }
 
+    // @property: The profile's name that corresponds to the existing file 
+    public string NameOnFile
+    {
+      get { return _originalName; }
+    }
+
+    // @property: The profile's components
     public ref List<Component> Components
     {
       get { return ref _components; }
