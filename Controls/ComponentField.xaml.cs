@@ -35,11 +35,12 @@ namespace FileKraken.Controls
       InitializeComponent();
     }
 
-    // === Events
+    // === UI Events
     private void Remove_Btn_Click(object sender, RoutedEventArgs e)
     {
       _Event_OnRemove?.Invoke(this);
     }
+    // === End UI Events
 
     // === Public Interface
     public Profile.Component GetComponentData()
@@ -50,5 +51,6 @@ namespace FileKraken.Controls
         _destinationLocation = Destination_Tb.Text
       };
     }
+    // === End Public Interface
   }
 }

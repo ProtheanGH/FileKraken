@@ -66,16 +66,18 @@ namespace FileKraken.Windows
     }
 
     // === Events
+    private void OnRemoveComponent(Controls.ComponentField component)
+    {
+      Components_ListView.Items.Remove(component);
+    }
+    // === End Events
+
+    // === UI Events
     private void ComponentAdd_Btn_Click(object sender, RoutedEventArgs e)
     {
       Controls.ComponentField newComponent = new Controls.ComponentField(OnRemoveComponent);
 
       AddComponent(newComponent);
-    }
-
-    private void OnRemoveComponent(Controls.ComponentField component)
-    {
-      Components_ListView.Items.Remove(component);
     }
 
     private void Okay_Btn_Click(object sender, RoutedEventArgs e)
@@ -87,7 +89,9 @@ namespace FileKraken.Windows
 
     private void RemoveProfile_Btn_Click(object sender, RoutedEventArgs e)
     {
+      _ignoreSelectionChange = true;
       RemoveProfile(_currentProfile.NameOnFile);
+      _currentProfile = null;
 
       if (_availabeProfiles.Count > 0)
       {
@@ -129,8 +133,7 @@ namespace FileKraken.Windows
         }
       }
     }
-
-    // === End Events
+    // === End UI Events
 
     // === Private Interface
     private void SwitchProfile(string profileName)
@@ -227,8 +230,8 @@ namespace FileKraken.Windows
     {
       File.Delete(ProfileConstants.GetProfileFilePath(profileName));
       _availabeProfiles.Remove(profileName);
+      Profile_Dropdown.Items.Remove(profileName);
     }
-
     // === End Private Interface
   }
 }

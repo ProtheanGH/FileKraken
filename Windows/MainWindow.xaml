@@ -5,8 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileKraken"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="450" Width="375">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="45"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="65" />
+        </Grid.ColumnDefinitions>
+        <Button x:Name="Settings_Btn" Content="" HorizontalAlignment="Center" Margin="10,10,10,0" VerticalAlignment="Top" Width="45" Grid.Column="1" Height="45" BorderThickness="0" Click="Settings_Btn_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/SettingsIcon.png"/>
+            </Button.Background>
+        </Button>
+        <Button x:Name="SyncTo_Btn" Content="Sync to ..." HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" FontWeight="Bold" FontStyle="Italic" Click="SyncTo_Btn_Click"/>
+        <Button x:Name="Sync_Btn" Content="Sync" HorizontalAlignment="Left" Margin="282,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Grid.ColumnSpan="2" FontStyle="Italic" FontWeight="Bold" Click="Sync_Btn_Click"/>
+        <ListView x:Name="Components_ListView" Margin="10,10,0,0" VerticalContentAlignment="Stretch">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>

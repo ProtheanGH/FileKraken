@@ -42,10 +42,25 @@ namespace FileKraken
         Directory.CreateDirectory(ProfileConstants.GetProfileDirectory());
       }
 
-      // === Testing Only === //
-      Windows.SettingsWindow settingsWindow = new Windows.SettingsWindow("GenericProfile"); // TODO: Make this read the active profile from some last session file
-      settingsWindow.Show();
-      // ==================== //
+      // TODO: Load the active profile from some last session file
     }
+
+    // === UI Events
+    private void Settings_Btn_Click(object sender, RoutedEventArgs e)
+    {
+      Windows.SettingsWindow settingsWindow = new Windows.SettingsWindow("GenericProfile"); // TODO: Use the current active profile
+      settingsWindow.Show();
+    }
+
+    private void Sync_Btn_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void SyncTo_Btn_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+    // === End UI Events
   }
 }

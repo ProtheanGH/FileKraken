@@ -113,9 +113,8 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <None Include="Resources\RemoveProfileIcon.bmp" />
+    <None Include="Resources\SettingsIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AddIcon.png" />
@@ -124,4 +123,7 @@
     <None Include="Resources\RemoveIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(SolutionDir)Resources" "$(TargetDir)Resources" /Y</PostBuildEvent>
+  </PropertyGroup>
 </Project>
