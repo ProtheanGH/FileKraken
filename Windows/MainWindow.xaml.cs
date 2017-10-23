@@ -29,6 +29,11 @@ namespace FileKraken
   /// </summary>
   public partial class MainWindow : Window
   {
+    // === Private Variables
+    // @overview: This is the default properties for any new Component Status Checkboxes to use
+    CheckBox _defaultComponentCheckbox;
+
+    // === Constructor
     public MainWindow()
     {
       InitializeComponent();
@@ -62,5 +67,9 @@ namespace FileKraken
 
     }
     // === End UI Events
+
+    // === Private Interface
+    void AddComponent()
+    // === End Private Interface
   }
 }

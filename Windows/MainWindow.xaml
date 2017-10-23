@@ -23,11 +23,16 @@
         <Button x:Name="SyncTo_Btn" Content="Sync to ..." HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" FontWeight="Bold" FontStyle="Italic" Click="SyncTo_Btn_Click"/>
         <Button x:Name="Sync_Btn" Content="Sync" HorizontalAlignment="Left" Margin="282,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Grid.ColumnSpan="2" FontStyle="Italic" FontWeight="Bold" Click="Sync_Btn_Click"/>
         <ListView x:Name="Components_ListView" Margin="10,10,0,0" VerticalContentAlignment="Stretch">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn/>
-                </GridView>
-            </ListView.View>
+            <CheckBox Content="{}{ ComponentName }" FlowDirection="RightToLeft" RenderTransformOrigin="0.5,0.5" Padding="8,-1,0,0" UseLayoutRounding="False" Margin="10,0,0,0">
+                <CheckBox.LayoutTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </CheckBox.LayoutTransform>
+            </CheckBox>
         </ListView>
     </Grid>
 </Window>
