@@ -29,9 +29,11 @@ namespace FileKraken
   /// </summary>
   public partial class MainWindow : Window
   {
+    // === Delegates
+    public delegate void OnSettingsWindowClose(Profile activeProfile);
+
     // === Private Variables
-    // @overview: This is the default properties for any new Component Status Checkboxes to use
-    CheckBox _defaultComponentCheckbox;
+    Profile _currentProfile;
 
     // === Constructor
     public MainWindow()
@@ -41,6 +43,9 @@ namespace FileKraken
       // Initialize
       ProfileConstants.Initialize();
 
+      // NOTE: May remove, left over from trying to copy over the default at the start of runtime
+      Components_ListView.Items.RemoveAt(0);
+
       // Make sure the needed Directories / Files exist
       if (false == Directory.Exists(FileKrakenConstants.GetFileKrakenDocumentsDirectory()))
       {
@@ -48,12 +53,18 @@ namespace FileKraken
       }
 
       // TODO: Load the active profile from some last session file
+      // === TESTING ONLY === //
+      Profile test = new Profile();
+      test.LoadFromXML(ProfileConstants.GetProfileDirectory() + "GenericProfile");
+
+      SetProfile(test);
+      // ==================== //
     }
 
     // === UI Events
     private void Settings_Btn_Click(object sender, RoutedEventArgs e)
     {
-      Windows.SettingsWindow settingsWindow = new Windows.SettingsWindow("GenericProfile"); // TODO: Use the current active profile
+      Windows.SettingsWindow settingsWindow = new Windows.SettingsWindow("GenericProfile", Settings_Window_Close); // TODO: Use the current active profile
       settingsWindow.Show();
     }
 
@@ -66,10 +77,46 @@ namespace FileKraken
     {
 
     }
+
+    private void Settings_Window_Close(Profile activeProfile)
+    {
+      SetProfile(activeProfile);
+    }
     // === End UI Events
 
+    // === Public Interface
+    public void SetProfile(string profileName)
+    {
+      Profile newProfile = new Profile();
+      newProfile.LoadFromXML(ProfileConstants.GetProfileFilePath(profileName));
+
+      SetProfile(newProfile);
+    }
+
+    public void SetProfile(Profile profile)
+    {
+      _currentProfile = profile;
+
+      Components_ListView.Items.Clear();
+
+      for (int i = 0; i < _currentProfile.Components.Count; ++i)
+      {
+        AddComponent(_currentProfile.Components[i]);
+      }
+    }
+    // === End Public Interface
+    
     // === Private Interface
-    void AddComponent()
+    private void AddComponent(Profile.Component component)
+    {
+      Controls.ComponentDisplay newComponentDisplay = new Controls.ComponentDisplay();
+
+      newComponentDisplay.DisplayText = component._componentName;
+      newComponentDisplay.IsChecked = component._active;
+      newComponentDisplay.ToolTip = "Source: " + component._sourceLocation + "\nDestination: " + component._destinationLocation;
+
+      Components_ListView.Items.Add(newComponentDisplay);
+    }
     // === End Private Interface
   }
 }

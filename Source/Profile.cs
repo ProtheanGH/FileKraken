@@ -65,10 +65,15 @@ namespace FileKraken.Source
     {
       _components.Clear();
 
+      if (false == HasProfileExtension(filepath))
+      {
+        filepath += ProfileConstants.kXMLFileExtension;
+      }
+
       XmlReader profileReader = null;
       try
       {
-        profileReader = XmlReader.Create(filepath + ProfileConstants.kXMLFileExtension);
+        profileReader = XmlReader.Create(filepath);
 
         while (profileReader.Read())
         {
@@ -135,9 +140,27 @@ namespace FileKraken.Source
       profileWriter.Flush();
       profileWriter.Close();
     }
-
+    // === End Public Interface
 
     // === Private Interface
+    private bool HasProfileExtension(string filePath)
+    {
+      string[] split = filePath.Split('.');
+
+      if (split.Length >= 2)
+      {
+        int lastIndex = split.Length - 1;
+        split[lastIndex] = "." + split[lastIndex];
+
+        if (split[lastIndex] == ProfileConstants.kXMLFileExtension)
+        {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
     private void XMLHelper_ReadProfile(ref XmlReader profileReader)
     {
       _profileName = profileReader.GetAttribute(ProfileConstants.kXMLAttribrute_Name);
@@ -197,6 +220,7 @@ namespace FileKraken.Source
         }
       }
     }
+    // === End Private Interface
 
     // === Properties
 
@@ -219,5 +243,6 @@ namespace FileKraken.Source
     {
       get { return ref _components; }
     }
+    // === End Properties
   }
 }

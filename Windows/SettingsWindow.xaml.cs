@@ -26,9 +26,10 @@ namespace FileKraken.Windows
     Profile _currentProfile;
     int _currentProfileIndex;
     bool _ignoreSelectionChange; // TODO: If another bool gets added, make a flag system
+    MainWindow.OnSettingsWindowClose _onClose;
 
     // === Constructor
-    public SettingsWindow(string activeProfile)
+    public SettingsWindow(string activeProfile, MainWindow.OnSettingsWindowClose onCloseFunc = null)
     {
       // Initialize the UI and WPF Objects
       InitializeComponent();
@@ -37,6 +38,7 @@ namespace FileKraken.Windows
       _currentProfile = null;
       _currentProfileIndex = 0;
       _ignoreSelectionChange = false;
+      _onClose = onCloseFunc;
 
       // Get the available profiles
       string[] profiles = Directory.GetFiles(ProfileConstants.GetProfileDirectory());
@@ -83,6 +85,8 @@ namespace FileKraken.Windows
     private void Okay_Btn_Click(object sender, RoutedEventArgs e)
     {
       SaveCurrentProfile();
+
+      _onClose?.Invoke(_currentProfile);
 
       this.Close();
     }
@@ -231,6 +235,11 @@ namespace FileKraken.Windows
       File.Delete(ProfileConstants.GetProfileFilePath(profileName));
       _availabeProfiles.Remove(profileName);
       Profile_Dropdown.Items.Remove(profileName);
+    }
+
+    private void Window_Closed(object sender, EventArgs e)
+    {
+
     }
     // === End Private Interface
   }
