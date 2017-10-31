@@ -137,6 +137,33 @@ namespace FileKraken.Windows
         }
       }
     }
+
+    private void AddProfile_Btn_Click(object sender, RoutedEventArgs e)
+    {
+      string profileName = "GenericProfile";
+      if (_availabeProfiles.Contains(profileName))
+      {
+        profileName += "_";
+        int number = 1;
+        while (true)
+        {
+          if (false == _availabeProfiles.Contains(profileName + number))
+          {
+            break;
+          }
+          ++number;
+        }
+        profileName += number.ToString();
+      }
+
+      _availabeProfiles.Add(profileName);
+      Profile_Dropdown.Items.Add(profileName);
+
+      Profile newProfile = new Profile(profileName);
+      newProfile.SaveToXML();
+
+      SwitchProfile(profileName);
+    }
     // === End UI Events
 
     // === Private Interface

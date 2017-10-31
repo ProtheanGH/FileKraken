@@ -9,7 +9,7 @@
     <Grid>
         <Label x:Name="Profile_Lbl" Content="Profile:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="Profile_Dropdown" HorizontalAlignment="Left" Margin="32,36,0,0" VerticalAlignment="Top" Width="196" SelectionChanged="Profile_Dropdown_SelectionChanged"/>
-        <Button x:Name="AddProfile_Btn" Content="" HorizontalAlignment="Left" Margin="260,36,0,0" VerticalAlignment="Top" Width="22" Height="22">
+        <Button x:Name="AddProfile_Btn" Content="" HorizontalAlignment="Left" Margin="260,36,0,0" VerticalAlignment="Top" Width="22" Height="22" Click="AddProfile_Btn_Click">
             <Button.Background>
                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/AddIcon.png"/>
             </Button.Background>
