@@ -163,8 +163,9 @@ namespace FileKraken.Windows
       {
         Controls.ComponentField compField = new Controls.ComponentField(OnRemoveComponent);
 
-        compField.Source_Tb.Text = _currentProfile.Components[i]._sourceLocation;
-        compField.Destination_Tb.Text = _currentProfile.Components[i]._destinationLocation;
+        compField.Source_Tb.Text = _currentProfile.Components[i].SourceLocation;
+        compField.Destination_Tb.Text = _currentProfile.Components[i].Destination;
+        compField.Active = _currentProfile.Components[i].Active;
 
         AddComponent(compField);
       }

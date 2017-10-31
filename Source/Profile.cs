@@ -41,10 +41,42 @@ namespace FileKraken.Source
     // === Structures
     public struct Component
     {
-      public string _componentName;
-      public string _sourceLocation;
-      public string _destinationLocation;
-      public bool _active;
+      // === Private Variables
+      private string _componentName;
+      private string _sourceLocation;
+      private string _destinationLocation;
+      private bool _active;
+
+      // === Properties
+      public string Name
+      {
+        get { return _componentName; }
+      }
+
+      public string SourceLocation
+      {
+        get { return _sourceLocation; }
+        set
+        {
+          _sourceLocation = value;
+          _sourceLocation.Replace('/', '\\');
+          string[] split = _sourceLocation.Split('\\');
+          _componentName = split[split.Length - 1];
+        }
+      }
+
+      public string Destination
+      {
+        get { return _destinationLocation; }
+        set { _destinationLocation = value; }
+      }
+
+      public bool Active
+      {
+        get { return _active; }
+        set { _active = value; }
+      }
+      // === End Properties
     }
 
     // === Private Variables
@@ -101,8 +133,13 @@ namespace FileKraken.Source
       return true;
     }
 
-    public void SaveToXML(string directory)
+    public void SaveToXML(string directory = "")
     {
+      if ("" == directory)
+      {
+        directory = ProfileConstants.GetProfileDirectory();
+      }
+
       // === If we had a valid original name that was different from our current name, then we need to delete that old profile file
       if ("" != _originalName && _originalName != _profileName)
       {
@@ -119,18 +156,13 @@ namespace FileKraken.Source
       profileWriter.WriteAttributeString(ProfileConstants.kXMLAttribrute_Name, _profileName);
 
       // Write all the components
-      string componentName = "";
       for (int i = 0; i < _components.Count; ++i)
       {
-        // Get the name of the componet
-        string[] splitComponent = _components[i]._sourceLocation.Split('\\');
-        componentName = splitComponent[splitComponent.Length - 1];
-
         profileWriter.WriteStartElement(ProfileConstants.kXMLElement_Component);
-        profileWriter.WriteAttributeString(ProfileConstants.kXMLAttribrute_Name, componentName);
-        profileWriter.WriteElementString(ProfileConstants.kXMLElement_Source, _components[i]._sourceLocation);
-        profileWriter.WriteElementString(ProfileConstants.kXMLElement_Destination, _components[i]._destinationLocation);
-        profileWriter.WriteElementString(ProfileConstants.kXMLElement_Active, _components[i]._active ? "true" : "false");
+        profileWriter.WriteAttributeString(ProfileConstants.kXMLAttribrute_Name, _components[i].Name);
+        profileWriter.WriteElementString(ProfileConstants.kXMLElement_Source, _components[i].SourceLocation);
+        profileWriter.WriteElementString(ProfileConstants.kXMLElement_Destination, _components[i].Destination);
+        profileWriter.WriteElementString(ProfileConstants.kXMLElement_Active, _components[i].Active ? "true" : "false");
         profileWriter.WriteEndElement();
       }
 
@@ -178,8 +210,6 @@ namespace FileKraken.Source
 
     private void XMLHelper_ReadComponent(ref XmlReader profileReader, ref Component component)
     {
-      component._componentName = profileReader.GetAttribute(ProfileConstants.kXMLAttribrute_Name);
-
       while (profileReader.Read() && XmlNodeType.EndElement != profileReader.NodeType)
       {
         switch (profileReader.Name)
@@ -190,7 +220,7 @@ namespace FileKraken.Source
             {
               if (XmlNodeType.Text == profileReader.NodeType)
               {
-                component._sourceLocation = profileReader.Value;
+                component.SourceLocation = profileReader.Value;
               }
             }
           }
@@ -201,7 +231,7 @@ namespace FileKraken.Source
             {
               if (XmlNodeType.Text == profileReader.NodeType)
               {
-                component._destinationLocation = profileReader.Value;
+                component.Destination = profileReader.Value;
               }
             }
           }
@@ -212,7 +242,7 @@ namespace FileKraken.Source
             {
               if (XmlNodeType.Text == profileReader.NodeType)
               {
-                component._active = (profileReader.Value.ToLower() == "true" ? true : false);
+                component.Active = (profileReader.Value.ToLower() == "true" ? true : false);
               }
             }
           }

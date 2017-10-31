@@ -27,6 +27,9 @@ namespace FileKraken.Controls
     // === Public Variables
     public RemoveComponentCallback _Event_OnRemove;
 
+    // === Private Variables
+    private bool _active;
+
     // === Constructor
     public ComponentField(RemoveComponentCallback onRemove)
     {
@@ -47,10 +50,19 @@ namespace FileKraken.Controls
     {
       return new Profile.Component
       {
-        _sourceLocation = Source_Tb.Text,
-        _destinationLocation = Destination_Tb.Text
+        Active = _active,
+        SourceLocation = Source_Tb.Text,
+        Destination = Destination_Tb.Text
       };
     }
     // === End Public Interface
+
+    // === Properties
+    public bool Active
+    {
+      get { return _active; }
+      set { _active = value; }
+    }
+    // === End Properties
   }
 }

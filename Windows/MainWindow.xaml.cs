@@ -64,7 +64,8 @@ namespace FileKraken
     // === UI Events
     private void Settings_Btn_Click(object sender, RoutedEventArgs e)
     {
-      Windows.SettingsWindow settingsWindow = new Windows.SettingsWindow("GenericProfile", Settings_Window_Close); // TODO: Use the current active profile
+      SaveActiveProfile();
+      Windows.SettingsWindow settingsWindow = new Windows.SettingsWindow(_currentProfile.ProfileName, Settings_Window_Close);
       settingsWindow.Show();
     }
 
@@ -81,6 +82,11 @@ namespace FileKraken
     private void Settings_Window_Close(Profile activeProfile)
     {
       SetProfile(activeProfile);
+    }
+
+    private void Window_Closed(object sender, EventArgs e)
+    {
+      SaveActiveProfile();
     }
     // === End UI Events
 
@@ -101,21 +107,36 @@ namespace FileKraken
 
       for (int i = 0; i < _currentProfile.Components.Count; ++i)
       {
-        AddComponent(_currentProfile.Components[i]);
+        AddComponent(i);
       }
     }
     // === End Public Interface
-    
-    // === Private Interface
-    private void AddComponent(Profile.Component component)
-    {
-      Controls.ComponentDisplay newComponentDisplay = new Controls.ComponentDisplay();
 
-      newComponentDisplay.DisplayText = component._componentName;
-      newComponentDisplay.IsChecked = component._active;
-      newComponentDisplay.ToolTip = "Source: " + component._sourceLocation + "\nDestination: " + component._destinationLocation;
+    // === Private Interface
+    private void AddComponent(int componentIndex)
+    {
+      Profile.Component component = _currentProfile.Components[componentIndex];
+
+      Controls.ComponentDisplay newComponentDisplay = new Controls.ComponentDisplay(componentIndex, UpdateComponent);
+
+      newComponentDisplay.DisplayText = component.Name;
+      newComponentDisplay.IsChecked = component.Active;
+      newComponentDisplay.ToolTip = "Source: " + component.SourceLocation + "\nDestination: " + component.Destination;
 
       Components_ListView.Items.Add(newComponentDisplay);
+    }
+
+    private void SaveActiveProfile()
+    {
+      _currentProfile.SaveToXML();
+    }
+
+    private void UpdateComponent(int componentIndex, bool isActive)
+    {
+      // TODO: There's gotta be a better way to do this
+      Profile.Component component = _currentProfile.Components[componentIndex];
+      component.Active = isActive;
+      _currentProfile.Components[componentIndex] = component;
     }
     // === End Private Interface
   }
