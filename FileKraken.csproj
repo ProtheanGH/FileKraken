@@ -65,6 +65,7 @@
     <Compile Include="Controls\ComponentField.xaml.cs">
       <DependentUpon>ComponentField.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Source\FileKrakenConfig.cs" />
     <Compile Include="Source\Profile.cs" />
     <Compile Include="Windows\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>

@@ -22,7 +22,7 @@ namespace FileKraken.Source
     // === Public Interface
     public static void Initialize()
     {
-      _profileDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Documents\\FileKraken\\Profiles\\";
+      _profileDirectory = FileKrakenConstants.GetFileKrakenDocumentsDirectory() + "\\Profiles\\";
     }
 
     public static string GetProfileDirectory()

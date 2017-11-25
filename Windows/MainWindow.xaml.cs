@@ -19,9 +19,18 @@ namespace FileKraken
 {
   static class FileKrakenConstants
   {
+    // === Private Variables
+    private static string _fileKrakenDocumentsDirectory = null;
+
+    // === Public Interface
+    public static void Initialize()
+    {
+      _fileKrakenDocumentsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Documents\\FileKraken";
+    }
+    
     public static string GetFileKrakenDocumentsDirectory()
     {
-      return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Documents\\FileKraken";
+      return _fileKrakenDocumentsDirectory;
     }
   }
   /// <summary>
@@ -41,6 +50,7 @@ namespace FileKraken
       InitializeComponent();
 
       // Initialize
+      FileKrakenConstants.Initialize();
       ProfileConstants.Initialize();
 
       // NOTE: May remove, left over from trying to copy over the default at the start of runtime
@@ -52,13 +62,11 @@ namespace FileKraken
         Directory.CreateDirectory(ProfileConstants.GetProfileDirectory());
       }
 
-      // TODO: Load the active profile from some last session file
-      // === TESTING ONLY === //
-      Profile test = new Profile();
-      test.LoadFromXML(ProfileConstants.GetProfileDirectory() + "GenericProfile");
+      FileKrakenConfig.LoadConfigFile();
+      Profile lastActive = new Profile();
+      lastActive.LoadFromXML(ProfileConstants.GetProfileDirectory() + FileKrakenConfig.LastProfile);
 
-      SetProfile(test);
-      // ==================== //
+      SetProfile(lastActive);
     }
 
     // === UI Events
@@ -129,6 +137,8 @@ namespace FileKraken
     private void SaveActiveProfile()
     {
       _currentProfile.SaveToXML();
+      FileKrakenConfig.LastProfile = _currentProfile.NameOnFile;
+      FileKrakenConfig.SaveConfigFile();
     }
 
     private void UpdateComponent(int componentIndex, bool isActive)
